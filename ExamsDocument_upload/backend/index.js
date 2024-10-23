@@ -14,6 +14,7 @@ app.use(cors({
     credentials:true,
     
 }));
+app.use(express.json());
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/');
