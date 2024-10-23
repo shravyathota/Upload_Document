@@ -3,7 +3,7 @@ import axios from 'axios';
 import './MainsForm.css';
 import { IoMdHome } from "react-icons/io";
 // import Logo_img from '../Images/image.png';
-// import Leftnavbar from './Leftnavbar';
+import Leftnavbar from './Leftnavbar';
 import { RxCross2 } from "react-icons/rx";
 
 const ExamCreation = () => {
@@ -147,7 +147,7 @@ const ExamCreation = () => {
           <IoMdHome /> Home
         </a>
       </div>
-      {/* <Leftnavbar /> */}
+      <Leftnavbar />
       <div className='headerpageh1'>
         <h1> Exam Selection Page</h1>
       </div>
