@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './MainsForm.css';
 import { IoMdHome } from "react-icons/io";
-// import Logo_img from '../Images/image.png';
+import Logo_img from '../Images/image.png';
 import Leftnavbar from './Leftnavbar';
 import { RxCross2 } from "react-icons/rx";
 
@@ -141,7 +141,7 @@ const ExamCreation = () => {
     <div>
       <div className='headerjeem'>
         <div className='headerjee'>
-          {/* <img src={Logo_img} alt="Logo" /> */}
+          <img src={Logo_img} alt="Logo" />
         </div>
         <a className='jeeanchor' href='/Home'>
           <IoMdHome /> Home
