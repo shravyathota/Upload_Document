@@ -57,7 +57,7 @@ const ExamCreation = () => {
     const formData = new FormData();
     formData.append('document', event.target.document.files[0]); // Append the file
     formData.append('examId', selectedExam);
-    formData.append('selectedSubjects', selectedSubjects.subject_id); // Send subjects as a JSON string
+    formData.append('selectedSubjects', selectedSubjects); // Send subjects as a JSON string
 
     try {
         const response = await axios.post('http://localhost:5000/ExamCreation/uploadDocument', formData, {

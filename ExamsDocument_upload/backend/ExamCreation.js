@@ -59,7 +59,7 @@ router.post('/uploadDocument', upload.single('document'), async (req, res) => {
         // Execute the query using the connection pool
         await db.execute(
             'INSERT INTO documents (subject_id, doc_name) VALUES (?, ?)', 
-            [examId, documentName] // Insert the exam ID and document name
+            [selectedSubjects, documentName] // Insert the exam ID and document name
         );
 
         // Send a success response
