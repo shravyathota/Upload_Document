@@ -6,6 +6,10 @@ import Logo_img from '../Images/egate-logo.png'
 import Leftnavbar from './Leftnavbar';
 import { RxCross2 } from "react-icons/rx";
 
+
+
+
+
 const ExamCreation = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [exams, setExams] = useState([]);
