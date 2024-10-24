@@ -229,7 +229,7 @@ const SelectionForm = ({
 }) => (
   
   <form onSubmit={onSubmit} className='ECUploadForm'>
-    <h1>{editingSelection ? 'Edit Selection' : 'Exam Selection'}</h1>
+    <h1 className='ECUploadFormh1'>{editingSelection ? 'Edit Selection' : 'Exam Selection'}</h1>
     <div className='div1'>
       <label htmlFor="exam">Select Exam:</label>
       <select id="examcreation" className='dropdown' value={selectedExam} onChange={onExamChange}>
@@ -266,8 +266,10 @@ const SelectionForm = ({
   />
 </div>
 
-
-    <button type="submit">{editingSelection ? 'Update Selection' : 'Submit Selection'}</button>
+<div className='div1SubmitBtn'>
+<button type="submit" className='ECUploadFormSubmitBtn'>{editingSelection ? 'Update Selection' : 'Submit Selection'}</button>
+</div>
+   
   </form>
 );
 

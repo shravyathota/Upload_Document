@@ -188,15 +188,6 @@ td a{
     align-items: center;
 }
 
-.examform h1{
-    background-color: #00222c;
-    color: #fff;
-    padding: 10px;
-    border-radius: 7px;
-    font-size: larger;
-    width: fit-content;
-   
-}
 *{
     box-sizing: border-box;
     font-family: Roboto, sans-serif;
@@ -331,6 +322,17 @@ label{
     font-weight: 400;
     font-size: 14px;
     color: #000;
+}
+.ECUploadFormh1 {
+    text-align: center;
+    text-decoration: underline;
+}
+.div1SubmitBtn{
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    padding-top: 30px;
 }
 .input {
     width: 100%; 
