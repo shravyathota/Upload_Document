@@ -219,8 +219,8 @@ const SelectionForm = ({
       <label htmlFor="exam">Select Exam:</label>
       <select id="examcreation" className='dropdown' value={selectedExam} onChange={onExamChange}>
         <option value="">--Select an exam--</option>
-        {exams.map(exam => (
-          <option key={exam.exam_id} value={exam.exam_id}>{exam.exam_name}</option>
+        {exams.map(exams => (
+          <option key={exams.exam_id} value={exams.exam_id}>{exams.exam_name}</option>
         ))}
       </select>
     </div>
