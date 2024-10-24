@@ -166,6 +166,7 @@ td a{
     padding: 10px;
     border-radius: 10px;
     top: 6vh;
+    cursor: pointer;
 }
 
 .selections-tablecontainer {

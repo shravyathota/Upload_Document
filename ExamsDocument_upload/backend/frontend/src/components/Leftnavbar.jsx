@@ -19,7 +19,7 @@ const Leftnavbar = () => {
   return (
     <div>
       <div className="sidebar">
-        <a href="/Examselection">
+        <a href="/">
           <button className={`nav-button ${activeButton === 'Exam' ? 'active' : ''}`}>
             Exam
           </button>
