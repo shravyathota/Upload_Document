@@ -32,13 +32,7 @@ const ExamCreation = () => {
     }
   }, [selectedExam]);
 
-  useEffect(() => {
-    axios.get('http://localhost:5000/ExamCreation/selections')
-      .then(response => {
-        setSelections(response.data);
-      })
-      .catch(error => console.error('Error fetching selections:', error));
-  }, []);
+
 
   const handleExamChange = (event) => {
     setSelectedExam(event.target.value);
