@@ -178,7 +178,7 @@ const ExamCreation = () => {
         </div>
       )}
 
-      <div className='selections-tablecontainer'>
+      {/* <div className='selections-tablecontainer'>
         <h2>Selection Table</h2>
         <table className='selections-table'>
           <thead>
@@ -203,7 +203,7 @@ const ExamCreation = () => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -211,7 +211,6 @@ const handleFileChange = (event) => {
   const file = event.target.files[0]; // Get the first selected file
   if (file) {
     console.log('Selected file:', file.name); // Log the file name
-    // You can also perform additional actions here, like uploading the file
   } else {
     console.log('No file selected');
   }
@@ -227,7 +226,7 @@ const SelectionForm = ({
   editingSelection,
   exams
 }) => (
-  
+
   <form onSubmit={onSubmit} className='ECUploadForm'>
     <h1 className='ECUploadFormh1'>{editingSelection ? 'Edit Selection' : 'Exam Selection'}</h1>
     <div className='div1'>
@@ -239,37 +238,37 @@ const SelectionForm = ({
         ))}
       </select>
     </div>
-  
-      <div className='div1'>
-        <label htmlFor="subject-select">Select Subjects:</label>
-        <select id="subject-select" className='dropdown' onChange={onSubjectChange}>
-          <option value="" >Select a subject</option>
-          {subjects.map(subject => (
-            <option
-              key={subject.subject_id}
-              value={subject.subject_id}
-              selected={selectedSubjects.includes(subject.subject_id.toString())}
-            >
-              {subject.subject_name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className='div1'>
-  <label htmlFor="document-upload">Choose Document:</label>
-  <input 
-    type="file" 
-    id="document-upload" 
-    accept=".doc, .docx" 
-    onChange={handleFileChange}
-    className='dropdown'
-  />
-</div>
 
-<div className='div1SubmitBtn'>
-<button type="submit" className='ECUploadFormSubmitBtn'>{editingSelection ? 'Update Selection' : 'Submit Selection'}</button>
-</div>
-   
+    <div className='div1'>
+      <label htmlFor="subject-select">Select Subjects:</label>
+      <select id="subject-select" className='dropdown' onChange={onSubjectChange}>
+        <option value="" >Select a subject</option>
+        {subjects.map(subject => (
+          <option
+            key={subject.subject_id}
+            value={subject.subject_id}
+            selected={selectedSubjects.includes(subject.subject_id.toString())}
+          >
+            {subject.subject_name}
+          </option>
+        ))}
+      </select>
+    </div>
+    <div className='div1'>
+      <label htmlFor="document-upload">Choose Document:</label>
+      <input
+        type="file"
+        id="document-upload"
+        accept=".doc, .docx"
+        onChange={handleFileChange}
+        className='dropdown'
+      />
+    </div>
+
+    <div className='div1SubmitBtn'>
+      <button type="submit" className='ECUploadFormSubmitBtn'>{editingSelection ? 'Update Selection' : 'Submit Selection'}</button>
+    </div>
+
   </form>
 );
 
