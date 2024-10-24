@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './MainsForm.css';
 import { IoMdHome } from "react-icons/io";
-import Logo_img from '../Images/image.png';
+import Logo_img from '../Images/egate-logo.png'
 import Leftnavbar from './Leftnavbar';
 import { RxCross2 } from "react-icons/rx";
 

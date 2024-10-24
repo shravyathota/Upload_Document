@@ -1,9 +1,9 @@
 const express = require('express');
-const mysql = require('mysql');
+// const mysql = require('mysql');
 const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
-
+const mysql = require('mysql2/promise');
 const app = express();
 const port = 5000;
 // CORS configuration
