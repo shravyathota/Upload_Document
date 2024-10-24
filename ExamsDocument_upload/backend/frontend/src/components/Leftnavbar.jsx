@@ -16,6 +16,7 @@ const Leftnavbar = () => {
     }
   }, [window.location.pathname]);
 
+  
   return (
     <div>
       <div className="sidebar">
