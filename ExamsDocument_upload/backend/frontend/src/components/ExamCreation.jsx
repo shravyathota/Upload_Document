@@ -50,28 +50,29 @@ const ExamCreation = () => {
 
   const handleSubjectChange = (event) => {
     const { value, checked } = event.target;
-    setSelectedSubjects(prev => 
-        checked ? [...prev, value] : prev.filter(subject => subject !== value)
+    setSelectedSubjects(prev =>
+      checked ? [...prev, value] : prev.filter(subject => subject !== value)
     );
   };
+
 
   const handleSubmitSelection = (event) => {
     event.preventDefault();
     const data = {
-        exam_id: selectedExam,
-        selectedsubjects: selectedSubjects,
+      exam_id: selectedExam,
+      selectedsubjects: selectedSubjects,
     };
 
     axios.post('http://localhost:5000/ExamCreation/submit-selection', data)
-        .then(() => {
-            alert('Selection saved successfully');
-            return axios.get('http://localhost:5000/ExamCreation/selections'); // Refresh selections
-        })
-        .then(response => {
-            setSelections(response.data);
-            resetForm();
-        })
-        .catch(error => console.error('Error saving selection:', error));
+      .then(() => {
+        alert('Selection saved successfully');
+        return axios.get('http://localhost:5000/ExamCreation/selections'); // Refresh selections
+      })
+      .then(response => {
+        setSelections(response.data);
+        resetForm();
+      })
+      .catch(error => console.error('Error saving selection:', error));
   };
 
   const handleEdit = (index) => {
@@ -80,7 +81,7 @@ const ExamCreation = () => {
       console.log('Editing selection:', selectionToEdit); // Debugging
       setEditingSelection(selectionToEdit.selection_id);
       setSelectedExam(selectionToEdit.exam_id);
-  
+
       const subjectIds = selectionToEdit.subject_ids || "";
       if (typeof subjectIds === 'string') {
         setSelectedSubjects(subjectIds.split(',').map(id => id.trim()));
@@ -91,48 +92,48 @@ const ExamCreation = () => {
       setModalOpen(true);
     }
   };
-  
+
   const handleUpdateSelection = (event) => {
     event.preventDefault();
     const data = {
-        exam_id: selectedExam,
-        selectedsubjects: selectedSubjects,
+      exam_id: selectedExam,
+      selectedsubjects: selectedSubjects,
     };
 
     axios.put(`http://localhost:5000/ExamCreation/selections/ExamCreation_update/${editingSelection}`, data)
-        .then(() => {
-            alert('Selection updated successfully');
-            return axios.get('http://localhost:5000/ExamCreation/selections'); // Refresh selections
-        })
-        .then(response => {
-            setSelections(response.data);
-            resetForm();
-        })
-        .catch(error => console.error('Error updating selection:', error));
+      .then(() => {
+        alert('Selection updated successfully');
+        return axios.get('http://localhost:5000/ExamCreation/selections'); // Refresh selections
+      })
+      .then(response => {
+        setSelections(response.data);
+        resetForm();
+      })
+      .catch(error => console.error('Error updating selection:', error));
   };
 
   const handleDelete = (exam_id) => {
     console.log("Attempting to delete selection with ID:", exam_id); // Log the ID
     if (exam_id === undefined) {
-        console.error("Selection ID is undefined. Cannot proceed with deletion.");
-        return;
+      console.error("Selection ID is undefined. Cannot proceed with deletion.");
+      return;
     }
 
     if (window.confirm('Are you sure you want to delete this selection?')) {
-        axios.delete(`http://localhost:5000/ExamCreation/selections/ExamCreation_delete/${exam_id}`)
-            .then(() => {
-                alert('Selection deleted successfully');
-                return axios.get('http://localhost:5000/ExamCreation/selections'); // Refresh selections
-            })
-            .then(response => {
-                setSelections(response.data);
-            })
-            .catch(error => {
-                console.error('Error deleting selection:', error);
-                alert('Failed to delete selection. Please try again.');
-            });
+      axios.delete(`http://localhost:5000/ExamCreation/selections/ExamCreation_delete/${exam_id}`)
+        .then(() => {
+          alert('Selection deleted successfully');
+          return axios.get('http://localhost:5000/ExamCreation/selections'); // Refresh selections
+        })
+        .then(response => {
+          setSelections(response.data);
+        })
+        .catch(error => {
+          console.error('Error deleting selection:', error);
+          alert('Failed to delete selection. Please try again.');
+        });
     }
-};
+  };
 
   const resetForm = () => {
     setModalOpen(false);
@@ -161,7 +162,7 @@ const ExamCreation = () => {
         <div className='examform'>
           <div className='modal'>
             <div className='content_s'>
-              <SelectionForm 
+              <SelectionForm
                 onSubmit={editingSelection === null ? handleSubmitSelection : handleUpdateSelection}
                 selectedExam={selectedExam}
                 onExamChange={handleExamChange}
@@ -206,18 +207,28 @@ const ExamCreation = () => {
     </div>
   );
 };
+const handleFileChange = (event) => {
+  const file = event.target.files[0]; // Get the first selected file
+  if (file) {
+    console.log('Selected file:', file.name); // Log the file name
+    // You can also perform additional actions here, like uploading the file
+  } else {
+    console.log('No file selected');
+  }
+};
 
-const SelectionForm = ({ 
-  onSubmit, 
-  selectedExam, 
-  onExamChange, 
-  subjects, 
-  selectedSubjects, 
-  onSubjectChange, 
+const SelectionForm = ({
+  onSubmit,
+  selectedExam,
+  onExamChange,
+  subjects,
+  selectedSubjects,
+  onSubjectChange,
   editingSelection,
-  exams 
+  exams
 }) => (
-  <form onSubmit={onSubmit}>
+  
+  <form onSubmit={onSubmit} className='ECUploadForm'>
     <h1>{editingSelection ? 'Edit Selection' : 'Exam Selection'}</h1>
     <div className='div1'>
       <label htmlFor="exam">Select Exam:</label>
@@ -228,23 +239,34 @@ const SelectionForm = ({
         ))}
       </select>
     </div>
-    {subjects.length > 0 && (
+  
       <div className='div1'>
-        <label>Select Subjects:</label>
-        {subjects.map(subject => (
-          <div key={subject.subject_id}>
-            <input
-              type='checkbox'
-              id={`subject-${subject.subject_id}`}
+        <label htmlFor="subject-select">Select Subjects:</label>
+        <select id="subject-select" className='dropdown' onChange={onSubjectChange}>
+          <option value="" >Select a subject</option>
+          {subjects.map(subject => (
+            <option
+              key={subject.subject_id}
               value={subject.subject_id}
-              checked={selectedSubjects.includes(subject.subject_id.toString())}
-              onChange={onSubjectChange}
-            />
-            <label htmlFor={`subject-${subject.subject_id}`}>{subject.subject_name}</label>
-          </div>
-        ))}
+              selected={selectedSubjects.includes(subject.subject_id.toString())}
+            >
+              {subject.subject_name}
+            </option>
+          ))}
+        </select>
       </div>
-    )}
+      <div className='div1'>
+  <label htmlFor="document-upload">Choose Document:</label>
+  <input 
+    type="file" 
+    id="document-upload" 
+    accept=".doc, .docx" 
+    onChange={handleFileChange}
+    className='dropdown'
+  />
+</div>
+
+
     <button type="submit">{editingSelection ? 'Update Selection' : 'Submit Selection'}</button>
   </form>
 );
