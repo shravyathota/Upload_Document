@@ -13,7 +13,6 @@ const ExamCreation = () => {
   const [subjects, setSubjects] = useState([]);
   const [selectedExam, setSelectedExam] = useState('');
   const [selectedSubjects, setSelectedSubjects] = useState([]);
-  const [editingSelection, setEditingSelection] = useState(null);
 
   useEffect(() => {
     axios.get('http://localhost:5000/ExamCreation/exams')
@@ -38,15 +37,14 @@ const ExamCreation = () => {
 
   const handleSubjectChange = (event) => {
     console.log(event.target.value)
-    const selectedOptions = Array.from(event.target.value);
-    setSelectedSubjects(selectedOptions);
+    // const selectedOptions = Array.from(event.target.value);
+    setSelectedSubjects(event.target.value);
   };
 
 
   const resetForm = () => {
     setModalOpen(false);
     setSelectedExam('');
-    setEditingSelection(null);
     setSelectedSubjects([]);
   };
 
@@ -55,9 +53,9 @@ const ExamCreation = () => {
     event.preventDefault();
 
     const formData = new FormData();
-    formData.append('document', event.target.document.files[0]); // Append the file
+    formData.append('document', event.target.document.files[0]); 
     formData.append('examId', selectedExam);
-    formData.append('selectedSubjects', selectedSubjects); // Send subjects as a JSON string
+    formData.append('selectedSubjects', selectedSubjects); 
 
     try {
         const response = await axios.post('http://localhost:5000/ExamCreation/uploadDocument', formData, {
@@ -72,7 +70,6 @@ const ExamCreation = () => {
         console.error('Error uploading document:', error);
     }
 };
-
 
   return (
     <div>
@@ -99,9 +96,7 @@ const ExamCreation = () => {
                 selectedExam={selectedExam}
                 onExamChange={handleExamChange}
                 subjects={subjects}
-                // selectedSubjects={selectedSubjects}
                 onSubjectChange={handleSubjectChange}
-                editingSelection={editingSelection}
                 exams={exams}
               />
               <button className='closebutton' onClick={resetForm}><RxCross2 /></button>
