@@ -14,21 +14,37 @@ const ExamCreation = () => {
   const [selectedExam, setSelectedExam] = useState('');
   const [selectedSubjects, setSelectedSubjects] = useState([]);
 
-  useEffect(() => {
-    axios.get('http://localhost:5000/ExamCreation/exams')
-      .then(response => setExams(response.data))
-      .catch(error => console.error('Error fetching exams:', error));
-  }, []);
 
   useEffect(() => {
+    // Fetch exams from the server
+    fetch('http://localhost:5000/ExamCreation/exams')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => setExams(data))
+        .catch(error => console.error('Error fetching exams:', error));
+}, []); // Empty dependency array means this runs once on component mount
+
+useEffect(() => {
     if (selectedExam) {
-      axios.get(`http://localhost:5000/ExamCreation/exam/${selectedExam}/subjects`)
-        .then(response => setSubjects(response.data))
-        .catch(error => console.error('Error fetching subjects:', error));
+        // Fetch subjects for the selected exam
+        fetch(`http://localhost:5000/ExamCreation/subjectsForExams/${selectedExam}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => setSubjects(data))
+            .catch(error => console.error('Error fetching subjects:', error));
     } else {
-      setSubjects([]);
+        setSubjects([]); // Reset subjects if no exam is selected
     }
-  }, [selectedExam]);
+}, [selectedExam]); // Runs when selectedExam changes
+
 
   const handleExamChange = (event) => {
     setSelectedExam(event.target.value);
