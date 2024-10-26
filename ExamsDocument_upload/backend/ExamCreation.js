@@ -46,6 +46,7 @@ router.get('/subjectsForExams/:exam_id', async (req, res) => {
 // **********************************************************************************************
 
 
+
 // // Helper function to insert records into the database
 // async function insertRecord(document, data) {
 //     const [result] = await db.query(`INSERT INTO ${document} SET ?`, data);
@@ -88,6 +89,7 @@ router.get('/subjectsForExams/:exam_id', async (req, res) => {
 //         let question_id = 0;
 //         let solution_id = 0;
 //         let imageIndex = 0;
+//         let qnlevel_id=0;
 //         let k = 1;
 
 //         for (let i = 0; i < textSections.length; i++) {
@@ -95,7 +97,8 @@ router.get('/subjectsForExams/:exam_id', async (req, res) => {
 //                 question_code = textSections[i].replace('[QID]', '').trim();
 //                 const questionCodeData = { question_code, doc_id: documentId };
 //                 await insertRecord('question_code_table', questionCodeData);
-//             } else if (textSections[i].includes('[Q]')) {
+//             } 
+//             else if (textSections[i].includes('[Q]')) {
 //                 let questionImagePath = '';
 //                 if (imageIndex < images.length) {
 //                     const imageName = `snapshot_${documentId}_question_${k}.png`;
@@ -105,17 +108,19 @@ router.get('/subjectsForExams/:exam_id', async (req, res) => {
 //                     imageIndex++;
 //                     k++;
 //                 }
-//                 const questionData = { question_code, question_img: questionImagePath, subject_id: selectedSubjects };
+//                 const questionData = { question_code, question_img: questionImagePath, subject_id: selectedSubjects,qnlevel_id:qnlevel_id };
 //                 question_id = await insertRecord('questions', questionData);
 //             } else if (textSections[i].includes('[QANS]')) {
 //                 const answerText = textSections[i].replace('[QANS]', '').trim();
 //                 const answerData = { answer_text: answerText, question_id: question_id };
 //                 await insertRecord('answers', answerData);
-//             } else if (textSections[i].includes('[QTYPE]')) {
+//             } 
+//             else if (textSections[i].includes('[QTYPE]')) {
 //                 const questionType = textSections[i].replace('[QTYPE]', '').trim();
 //                 const questionTypeData = { type_of_question: questionType };
 //                 await insertRecord('question_type', questionTypeData);
-//             } else if (textSections[i].includes('[QSOL]')) {
+//             }
+//              else if (textSections[i].includes('[QSOL]')) {
 //                 let solutionImagePath = '';
 //                 if (imageIndex < images.length) {
 //                     const imageName = `snapshot_${documentId}_solution_${k}.png`;
@@ -127,15 +132,30 @@ router.get('/subjectsForExams/:exam_id', async (req, res) => {
 //                 }
 //                 const solutionData = { question_id: question_id, solution_img: solutionImagePath };
 //                 solution_id = await insertRecord('solution', solutionData);
-//             } else if (textSections[i].includes('[QVSOL]')) {
+//             }
+            
+//             else if (textSections[i].includes('[QVSOL]')) {
 //                 if (solution_id) {
 //                     const solution_link = textSections[i].replace('[QVSOL]', '').trim();
-//                     const videoSolutionData = { solution_id: solution_id, video_solution_link: solution_link };
+//                     const videoSolutionData = { solution_id: solution_id, video_sol_link: solution_link };
 //                     await insertRecord('video_solution', videoSolutionData);
 //                 } else {
 //                     console.error('Solution ID not found for video solution');
 //                 }
-//             } else if (['(a)', '(b)', '(c)', '(d)'].some(option => textSections[i].startsWith(option))) {
+//             }
+//             else if (textSections[i].includes('[QL]')) {
+//                 if (question_id) {
+//                     const qnlevel_name = textSections[i].replace('[QL]', '').trim();
+//                     const questionLevelData = { 
+//                         question_id:question_id,
+//                         qnlevel_name:qnlevel_name
+//                      };
+//                     await insertRecord('question_level', questionLevelData);
+//                 } else {
+//                     console.error('Question level ID not found for question');
+//                 }
+//             }
+//             else if (['(a)', '(b)', '(c)', '(d)'].some(option => textSections[i].startsWith(option))) {
 //                 const optionText = textSections[i].trim();
 //                 let optionImagePath = '';
 //                 if (imageIndex < images.length) {
@@ -158,20 +178,10 @@ router.get('/subjectsForExams/:exam_id', async (req, res) => {
 //     }
 // });
 
-
-
-
-
-
-
-
-
-// Helper function to insert records into the database
 async function insertRecord(document, data) {
     const [result] = await db.query(`INSERT INTO ${document} SET ?`, data);
     return result.insertId;
 }
-
 router.post('/uploadDocument', upload.single('document'), async (req, res) => {
     const outputDir = path.join(__dirname, 'uploads');
     const filePath = req.file.path;
@@ -208,6 +218,7 @@ router.post('/uploadDocument', upload.single('document'), async (req, res) => {
         let question_id = 0;
         let solution_id = 0;
         let imageIndex = 0;
+        let qnlevel_id = null; // Initialize to null so it can be set when `[QL]` is encountered
         let k = 1;
 
         for (let i = 0; i < textSections.length; i++) {
@@ -215,7 +226,8 @@ router.post('/uploadDocument', upload.single('document'), async (req, res) => {
                 question_code = textSections[i].replace('[QID]', '').trim();
                 const questionCodeData = { question_code, doc_id: documentId };
                 await insertRecord('question_code_table', questionCodeData);
-            } else if (textSections[i].includes('[Q]')) {
+            } 
+            else if (textSections[i].includes('[Q]')) {
                 let questionImagePath = '';
                 if (imageIndex < images.length) {
                     const imageName = `snapshot_${documentId}_question_${k}.png`;
@@ -225,17 +237,30 @@ router.post('/uploadDocument', upload.single('document'), async (req, res) => {
                     imageIndex++;
                     k++;
                 }
-                const questionData = { question_code, question_img: questionImagePath, subject_id: selectedSubjects };
+                const questionData = { question_code, question_img: questionImagePath, subject_id: selectedSubjects, qnlevel_id };
                 question_id = await insertRecord('questions', questionData);
-            } else if (textSections[i].includes('[QANS]')) {
+            } 
+            else if (textSections[i].includes('[QL]')) {
+                const qnlevel_name = textSections[i].replace('[QL]', '').trim();
+                
+                // Insert question level if available, and retrieve the ID for the level
+                const questionLevelData = { qnlevel_name,question_id:question_id};
+                const questionLevelResult = await insertRecord('question_level', questionLevelData);
+                
+                // Set qnlevel_id from the inserted record
+                qnlevel_id = questionLevelResult;
+            }
+            else if (textSections[i].includes('[QANS]')) {
                 const answerText = textSections[i].replace('[QANS]', '').trim();
                 const answerData = { answer_text: answerText, question_id: question_id };
                 await insertRecord('answers', answerData);
-            } else if (textSections[i].includes('[QTYPE]')) {
+            } 
+            else if (textSections[i].includes('[QTYPE]')) {
                 const questionType = textSections[i].replace('[QTYPE]', '').trim();
                 const questionTypeData = { type_of_question: questionType };
                 await insertRecord('question_type', questionTypeData);
-            } else if (textSections[i].includes('[QSOL]')) {
+            }
+             else if (textSections[i].includes('[QSOL]')) {
                 let solutionImagePath = '';
                 if (imageIndex < images.length) {
                     const imageName = `snapshot_${documentId}_solution_${k}.png`;
@@ -247,15 +272,17 @@ router.post('/uploadDocument', upload.single('document'), async (req, res) => {
                 }
                 const solutionData = { question_id: question_id, solution_img: solutionImagePath };
                 solution_id = await insertRecord('solution', solutionData);
-            } else if (textSections[i].includes('[QVSOL]')) {
+            }
+            else if (textSections[i].includes('[QVSOL]')) {
                 if (solution_id) {
                     const solution_link = textSections[i].replace('[QVSOL]', '').trim();
-                    const videoSolutionData = { solution_id: solution_id, video_solution_link: solution_link };
+                    const videoSolutionData = { solution_id: solution_id, video_sol_link: solution_link };
                     await insertRecord('video_solution', videoSolutionData);
                 } else {
                     console.error('Solution ID not found for video solution');
                 }
-            } else if (['(a)', '(b)', '(c)', '(d)'].some(option => textSections[i].startsWith(option))) {
+            }
+            else if (['(a)', '(b)', '(c)', '(d)'].some(option => textSections[i].startsWith(option))) {
                 const optionText = textSections[i].trim();
                 let optionImagePath = '';
                 if (imageIndex < images.length) {
@@ -277,8 +304,6 @@ router.post('/uploadDocument', upload.single('document'), async (req, res) => {
         res.status(500).send('Failed to upload and process the document.');
     }
 });
-
-
 
 
 
