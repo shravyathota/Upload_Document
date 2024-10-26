@@ -25,6 +25,11 @@ const Leftnavbar = () => {
             Exam
           </button>
         </a>
+        {/* <a href="/Questions">
+          <button className={`nav-button ${activeButton === 'Exam' ? 'active' : ''}`}>
+            Questions
+          </button>
+        </a> */}
       </div>
     </div>
   );
