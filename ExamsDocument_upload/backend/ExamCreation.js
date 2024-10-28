@@ -45,9 +45,6 @@ router.get('/subjectsForExams/:exam_id', async (req, res) => {
 
 // **********************************************************************************************
 
-
-
-
 async function insertRecord(document, data) {
     const [result] = await db.query(`INSERT INTO ${document} SET ?`, data);
     return result.insertId;
@@ -73,7 +70,7 @@ router.post('/uploadDocument', upload.single('document'), async (req, res) => {
 
         const topicId = await insertRecord('topics', {
             subject_id: selectedSubjects,
-            topic_name: topicName, 
+            topic_name: topicName,
         });
 
         const documentResult = await insertRecord('documents', {
@@ -97,7 +94,7 @@ router.post('/uploadDocument', upload.single('document'), async (req, res) => {
         let question_id = 0;
         let solution_id = 0;
         let imageIndex = 0;
-        let qnlevel_id = null; 
+        let qnlevel_id = null;
         let k = 1;
 
         for (let i = 0; i < textSections.length; i++) {
@@ -107,15 +104,15 @@ router.post('/uploadDocument', upload.single('document'), async (req, res) => {
                 await insertRecord('question_code_table', questionCodeData);
             }
             const qnlevel_name = textSections[i].replace('[QL]', '').trim();
-                if(qnlevel_name==='Easy'){
-                    questionLevelIdFromText=1;
-                }
-                else if(qnlevel_name==='Medium'){
-                    questionLevelIdFromText=2;
-                }
-                else if(qnlevel_name==='Hard'){
-                    questionLevelIdFromText=3;
-                }
+            if (qnlevel_name === 'Easy') {
+                questionLevelIdFromText = 1;
+            }
+            else if (qnlevel_name === 'Medium') {
+                questionLevelIdFromText = 2;
+            }
+            else if (qnlevel_name === 'Hard') {
+                questionLevelIdFromText = 3;
+            }
 
             else if (textSections[i].includes('[Q]')) {
                 let questionImagePath = '';
@@ -130,26 +127,7 @@ router.post('/uploadDocument', upload.single('document'), async (req, res) => {
                 const questionData = { question_code, question_img: questionImagePath, subject_id: selectedSubjects, qnlevel_id: questionLevelIdFromText };
                 question_id = await insertRecord('questions', questionData);
             }
-            // else if (textSections[i].includes('[QL]')) {
-            //     const qnlevel_name = textSections[i].replace('[QL]', '').trim();
-            //     console.log("Question level name from the doc", qnlevel_name);
-            //     if(qnlevel_name==='Easy'){
-            //         console.log("this is Easy question level");
-            //         questionLevelIdFromText=1;
-            //     }
-            //     else if(qnlevel_name==='Medium'){
-            //         questionLevelIdFromText=2;
-            //     }
-            //     else if(qnlevel_name==='Hard'){
-            //         questionLevelIdFromText=3;
-            //     }
-            //     // Insert question level if available, and retrieve the ID for the level
-            //     const questionLevelData = { qnlevel_name};
-            //     const questionLevelResult = await insertRecord('question_level', questionLevelData);
-
-            //     // Set qnlevel_id from the inserted record
-            //     qnlevel_id = questionLevelResult;
-            // }
+      
             else if (textSections[i].includes('[QANS]')) {
                 const answerText = textSections[i].replace('[QANS]', '').trim();
                 const answerData = { answer_text: answerText, question_id: question_id };
@@ -158,8 +136,16 @@ router.post('/uploadDocument', upload.single('document'), async (req, res) => {
             else if (textSections[i].includes('[QTYPE]')) {
                 const questionType = textSections[i].replace('[QTYPE]', '').trim();
                 const questionTypeData = { type_of_question: questionType };
-                await insertRecord('question_type', questionTypeData);
+                
+                // Insert question type and get the ID
+                const questionTypeId = await insertRecord('question_type', questionTypeData);
+            
+                // Insert into the qtype table with question_id and question_type_id
+                const qTypeData = { question_id: question_id, question_type_id: questionTypeId };
+                await insertRecord('qtype', qTypeData);
             }
+            
+
             else if (textSections[i].includes('[QSOL]')) {
                 let solutionImagePath = '';
                 if (imageIndex < images.length) {
@@ -205,12 +191,7 @@ router.post('/uploadDocument', upload.single('document'), async (req, res) => {
     }
 });
 
-
-
-
-
-
-
+// ******************************************************************************
 
 
 
