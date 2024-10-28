@@ -16,6 +16,9 @@
     padding: 20px;
     align-items: center;
 }
+.topicNameEC{
+    padding: 5px;
+}
 
 .modal, .overlay {
     position: fixed;
