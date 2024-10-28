@@ -56,7 +56,7 @@ async function insertRecord(document, data) {
 router.post('/uploadDocument', upload.single('document'), async (req, res) => {
     const outputDir = path.join(__dirname, 'uploads');
     const filePath = req.file.path;
-
+    let questionLevelIdFromText
 
     try {
         await fsPromises.mkdir(outputDir, { recursive: true });
@@ -106,6 +106,17 @@ router.post('/uploadDocument', upload.single('document'), async (req, res) => {
                 const questionCodeData = { question_code, doc_id: documentId };
                 await insertRecord('question_code_table', questionCodeData);
             }
+            const qnlevel_name = textSections[i].replace('[QL]', '').trim();
+                if(qnlevel_name==='Easy'){
+                    questionLevelIdFromText=1;
+                }
+                else if(qnlevel_name==='Medium'){
+                    questionLevelIdFromText=2;
+                }
+                else if(qnlevel_name==='Hard'){
+                    questionLevelIdFromText=3;
+                }
+
             else if (textSections[i].includes('[Q]')) {
                 let questionImagePath = '';
                 if (imageIndex < images.length) {
@@ -116,19 +127,29 @@ router.post('/uploadDocument', upload.single('document'), async (req, res) => {
                     imageIndex++;
                     k++;
                 }
-                const questionData = { question_code, question_img: questionImagePath, subject_id: selectedSubjects, qnlevel_id:qnlevel_id };
+                const questionData = { question_code, question_img: questionImagePath, subject_id: selectedSubjects, qnlevel_id: questionLevelIdFromText };
                 question_id = await insertRecord('questions', questionData);
             }
-            else if (textSections[i].includes('[QL]')) {
-                const qnlevel_name = textSections[i].replace('[QL]', '').trim();
+            // else if (textSections[i].includes('[QL]')) {
+            //     const qnlevel_name = textSections[i].replace('[QL]', '').trim();
+            //     console.log("Question level name from the doc", qnlevel_name);
+            //     if(qnlevel_name==='Easy'){
+            //         console.log("this is Easy question level");
+            //         questionLevelIdFromText=1;
+            //     }
+            //     else if(qnlevel_name==='Medium'){
+            //         questionLevelIdFromText=2;
+            //     }
+            //     else if(qnlevel_name==='Hard'){
+            //         questionLevelIdFromText=3;
+            //     }
+            //     // Insert question level if available, and retrieve the ID for the level
+            //     const questionLevelData = { qnlevel_name};
+            //     const questionLevelResult = await insertRecord('question_level', questionLevelData);
 
-                // Insert question level if available, and retrieve the ID for the level
-                const questionLevelData = { qnlevel_name};
-                const questionLevelResult = await insertRecord('question_level', questionLevelData);
-
-                // Set qnlevel_id from the inserted record
-                qnlevel_id = questionLevelResult;
-            }
+            //     // Set qnlevel_id from the inserted record
+            //     qnlevel_id = questionLevelResult;
+            // }
             else if (textSections[i].includes('[QANS]')) {
                 const answerText = textSections[i].replace('[QANS]', '').trim();
                 const answerData = { answer_text: answerText, question_id: question_id };
@@ -189,7 +210,14 @@ router.post('/uploadDocument', upload.single('document'), async (req, res) => {
 
 
 
-// start work on question and question level table monday
+
+
+
+
+
+
+
+
 
 
 
